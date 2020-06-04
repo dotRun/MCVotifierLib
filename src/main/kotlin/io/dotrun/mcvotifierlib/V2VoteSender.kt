@@ -9,7 +9,7 @@ import java.io.InputStreamReader
 import java.net.InetSocketAddress
 import java.net.Socket
 import java.security.Key
-import java.util.*
+import java.util.Base64
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
