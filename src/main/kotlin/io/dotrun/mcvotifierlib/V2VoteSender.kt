@@ -1,10 +1,8 @@
-package io.dotrun.mcvotifierlib.v1
+package io.dotrun.mcvotifierlib
 
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import io.dotrun.mcvotifierlib.Vote
-import io.dotrun.mcvotifierlib.VotifierClient
 import java.io.BufferedReader
 import java.io.DataOutputStream
 import java.io.InputStreamReader
@@ -13,11 +11,12 @@ import java.net.Socket
 import java.security.Key
 import java.util.*
 import javax.crypto.Mac
+import javax.crypto.spec.SecretKeySpec
 
-data class V2VotifierClient(
+data class V2VoteSender(
     override val address: InetSocketAddress,
     val key: Key
-) : VotifierClient(address) {
+) : VoteSender(address) {
 
     companion object {
         const val MAGIC = 0x733A
@@ -25,6 +24,11 @@ data class V2VotifierClient(
 
     data class V2Message(val signature: String, val payload: String)
     data class V2Response(val status: String, val cause: String?, val error: String?)
+
+    constructor(address: InetSocketAddress, token: String) : this(
+        address,
+        SecretKeySpec(token.toByteArray(), "HmacSHA256")
+    )
 
     private val mapper = jacksonObjectMapper()
     private val mac = Mac.getInstance("HmacSHA256").also { it.init(key) }
@@ -46,7 +50,12 @@ data class V2VotifierClient(
                 it.toString()
             }
             val signature = Base64.getEncoder().encodeToString(mac.doFinal(payload.toByteArray()))
-            val message = mapper.writeValueAsBytes(V2Message(signature, payload))
+            val message = mapper.writeValueAsBytes(
+                V2Message(
+                    signature,
+                    payload
+                )
+            )
             out.writeShort(MAGIC)
             out.writeShort(message.size)
             out.write(message)
