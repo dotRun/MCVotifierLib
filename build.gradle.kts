@@ -1,14 +1,13 @@
 import pl.allegro.tech.build.axion.release.domain.hooks.HookContext
-import pl.allegro.tech.build.axion.release.domain.hooks.HooksConfig
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 plugins {
-    kotlin("jvm") version "1.3.72"
+    kotlin("jvm") version "1.7.21"
     id("maven-publish")
-    id("pl.allegro.tech.build.axion-release") version "1.12.0"
-    id("org.jlleitschuh.gradle.ktlint") version "9.2.1"
+    id("pl.allegro.tech.build.axion-release") version "1.14.2"
+    id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
 }
 
 val repoRef = "dotRun\\/MCVotifierLib"
@@ -16,66 +15,46 @@ val repoRef = "dotRun\\/MCVotifierLib"
 group = "io.dotrun"
 version = scmVersion.version
 
-scmVersion {
-    hooks(closureOf<HooksConfig> {
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}
 
-        // "normal" changelog update--changelog already contains a history
+scmVersion {
+    versionIncrementer("incrementMinorIfNotOnRelease", mapOf("releaseBranchPattern" to "release/.+"))
+
+    hooks {
+        // FIXME - workaround for Kotlin DSL issue https://github.com/allegro/axion-release-plugin/issues/500
         pre(
-            "fileUpdate",
-            mapOf(
+            "fileUpdate", mapOf(
                 "file" to "CHANGELOG.md",
-                "pattern" to KotlinClosure2<String, HookContext, String>({ v, _ ->
-                    "\\[Unreleased\\]([\\s\\S]+?)\\n(?:^\\[Unreleased\\]: https:\\/\\/github\\.com\\/$repoRef\\/compare\\/release-$v\\.\\.\\.HEAD\$([\\s\\S]*))?\\z"
+                "pattern" to KotlinClosure2<String, HookContext, String>({ _, _ ->
+                    "\\[Unreleased\\]([\\s\\S]+?)\\n(?:^\\[Unreleased\\]: https:\\/\\/github\\.com\\/$repoRef\\/compare\\/[^\\n]*\$([\\s\\S]*))?\\z"
                 }),
                 "replacement" to KotlinClosure2<String, HookContext, String>({ v, c ->
                     """
                         \[Unreleased\]
                         
                         ## \[$v\] - ${currentDateString()}$1
-                        \[Unreleased\]: https:\/\/github\.com\/$repoRef\/compare\/release-$v...HEAD
-                        \[$v\]: https:\/\/github\.com\/$repoRef\/compare\/release-${c.previousVersion}...release-$v$2
+                        \[Unreleased\]: https:\/\/github\.com\/$repoRef\/compare\/v$v...HEAD
+                        \[$v\]: https:\/\/github\.com\/$repoRef\/${if (c.previousVersion == v) "releases/tag/v$v" else "compare/v${c.previousVersion}...v$v"}${'$'}2
                     """.trimIndent()
                 })
             )
         )
-        // first-time changelog update--changelog has only unreleased info
-        pre(
-            "fileUpdate",
-            mapOf(
-                "file" to "CHANGELOG.md",
-                "pattern" to KotlinClosure2<String, HookContext, String>({ v, _ ->
-                    "Unreleased([\\s\\S]+?\\nand this project adheres to \\[Semantic Versioning\\]\\(https:\\/\\/semver\\.org\\/spec\\/v2\\.0\\.0\\.html\\).)\\s\\z"
-                }),
-                "replacement" to KotlinClosure2<String, HookContext, String>({ v, c ->
-                    """
-                        \[Unreleased\]
-                        
-                        ## \[$v\] - ${currentDateString()}$1
-                        
-                        \[Unreleased\]: https:\/\/github\.com\/$repoRef\/compare\/release-$v...HEAD
-                        \[$v\]: https:\/\/github\.com\/$repoRef\/releases\/tag\/release-$v
-                    """.trimIndent()
-                })
-            )
-        )
-        pre("commit")
-    })
+    }
 }
 
 fun currentDateString() = OffsetDateTime.now(ZoneOffset.UTC).toLocalDate().format(DateTimeFormatter.ISO_DATE)
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
-}
-
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-    implementation(group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version = "2.11.+")
+    implementation(group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version = "2.14.+")
 }
 
 ktlint {
@@ -104,13 +83,7 @@ publishing {
 
 tasks {
     wrapper {
-        gradleVersion = "6.5"
+        gradleVersion = "7.5.1"
         distributionType = Wrapper.DistributionType.ALL
-    }
-
-    compileKotlin {
-        kotlinOptions {
-            jvmTarget = "1.8"
-        }
     }
 }

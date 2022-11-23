@@ -1,6 +1,9 @@
 # Changelog
 
 ## [Unreleased]
+### Changed
+- Java 17
+- Update dependencies
 
 ## [0.1.0] - 2020-06-04
 ### Added
