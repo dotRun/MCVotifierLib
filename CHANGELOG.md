@@ -6,6 +6,9 @@
 - Updated Actions CI with newer actions, shared build job, and snapshot releases
 - Update dependencies
 
+### Fixed
+- Use maven-compatible version for dependencies (jackson `2.14.0` instead of `2.14.+`)
+
 ## [0.1.0] - 2020-06-04
 ### Added
 - Initial Release

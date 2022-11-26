@@ -31,3 +31,7 @@ jobs:
         with:
           args: |
             build/*.jar
+      - name: Gradle Publish
+        run: ./gradlew publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

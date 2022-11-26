@@ -55,7 +55,7 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-    implementation(group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version = "2.14.+")
+    implementation(group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version = "2.14.0")
 }
 
 ktlint {
