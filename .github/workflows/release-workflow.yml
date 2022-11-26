@@ -22,6 +22,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: gradle/gradle-build-action@v2
+      - name: Fetch tags
+        run: git fetch --tags --unshallow
       - name: Gradle Release
         if: ${{ inputs.versionIncrementer == '' }}
         run: ./gradlew release
