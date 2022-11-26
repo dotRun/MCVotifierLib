@@ -3,6 +3,7 @@
 ## [Unreleased]
 ### Changed
 - Java 17
+- Updated Actions CI with newer actions, shared build job, and snapshot releases
 - Update dependencies
 
 ## [0.1.0] - 2020-06-04
