@@ -6,8 +6,9 @@ on:
       versionIncrementer:
         type: choice
         description: Override the default version incrementer according to https://axion-release-plugin.readthedocs.io/en/latest/configuration/version/#incrementing
-        required: false
+        default: default
         options:
+          - default
           - incrementPatch
           - incrementMinor
           - incrementMajor
@@ -25,8 +26,8 @@ jobs:
       - name: Fetch tags
         run: git fetch --tags --unshallow
       - name: Gradle Release
-        if: ${{ inputs.versionIncrementer == '' }}
+        if: ${{ inputs.versionIncrementer == 'default' }}
         run: ./gradlew release
       - name: Gradle Release w/ Increment Override
-        if: ${{ inputs.versionIncrementer != '' }}
+        if: ${{ inputs.versionIncrementer != 'default' }}
         run: ./gradlew release -Prelease.versionIncrementer=${{ inputs.versionIncrementer }}
