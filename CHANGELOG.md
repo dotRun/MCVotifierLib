@@ -1,6 +1,9 @@
 # Changelog
 
 ## [Unreleased]
+### Added
+- Separate publish and release creation action workflows
+
 ### Changed
 - Java 17
 - Updated Actions CI with newer actions, shared build job, and snapshot releases
