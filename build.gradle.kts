@@ -27,7 +27,8 @@ scmVersion {
     hooks {
         // FIXME - workaround for Kotlin DSL issue https://github.com/allegro/axion-release-plugin/issues/500
         pre(
-            "fileUpdate", mapOf(
+            "fileUpdate",
+            mapOf(
                 "file" to "CHANGELOG.md",
                 "pattern" to KotlinClosure2<String, HookContext, String>({ _, _ ->
                     "\\[Unreleased\\]([\\s\\S]+?)\\n(?:^\\[Unreleased\\]: https:\\/\\/github\\.com\\/$repoRef\\/compare\\/[^\\n]*\$([\\s\\S]*))?\\z"
