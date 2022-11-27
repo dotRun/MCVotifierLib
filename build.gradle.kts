@@ -44,6 +44,8 @@ scmVersion {
                 })
             )
         )
+
+        pre("commit")
     }
 }
 

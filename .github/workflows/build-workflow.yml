@@ -14,6 +14,8 @@ jobs:
       version: ${{ steps.version.outputs.version }}
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - uses: gradle/gradle-build-action@v2
       - name: Gradle Build
         run: ./gradlew build
