@@ -60,11 +60,6 @@ dependencies {
     implementation(group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version = "2.14.0")
 }
 
-ktlint {
-    // FIXME - ktlint bug(?): https://github.com/pinterest/ktlint/issues/527
-    disabledRules.set(listOf("import-ordering"))
-}
-
 publishing {
     repositories {
         maven {
