@@ -30,6 +30,7 @@ jobs:
           PRE_RELEASE: ${{ github.ref_type == 'branch' }}
           UNRELEASED: ${{ github.ref_type == 'branch' && 'update' || '' }}
           UNRELEASED_TAG: latest-snapshot
+          ALLOW_EMPTY_CHANGELOG: ${{ github.ref_type == 'branch' && 'true' || 'false' }}
         with:
           args: |
             build/*.jar
