@@ -1,6 +1,9 @@
 # Changelog
 
 ## [Unreleased]
+### Changed
+- Update to Gradle 8
+- Bump Gradle plugins and dependencies
 
 ## [0.2.0] - 2022-11-27
 ### Added

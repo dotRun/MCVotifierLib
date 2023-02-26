@@ -4,10 +4,10 @@ import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 plugins {
-    kotlin("jvm") version "1.7.21"
+    kotlin("jvm") version "1.8.10"
     id("maven-publish")
-    id("pl.allegro.tech.build.axion-release") version "1.14.2"
-    id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
+    id("pl.allegro.tech.build.axion-release") version "1.14.4"
+    id("org.jlleitschuh.gradle.ktlint") version "11.2.0"
 }
 
 val repoRef = "dotRun\\/MCVotifierLib"
@@ -57,7 +57,7 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-    implementation(group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version = "2.14.0")
+    implementation(group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version = "2.14.2")
 }
 
 publishing {
@@ -81,7 +81,7 @@ publishing {
 
 tasks {
     wrapper {
-        gradleVersion = "7.6"
+        gradleVersion = "8.0.1"
         distributionType = Wrapper.DistributionType.ALL
     }
 }
