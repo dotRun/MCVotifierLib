@@ -1,8 +1,8 @@
 package io.dotrun.mcvotifierlib
 
-import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
+import tools.jackson.databind.node.ObjectNode
+import tools.jackson.module.kotlin.jacksonObjectMapper
+import tools.jackson.module.kotlin.readValue
 import java.io.BufferedReader
 import java.io.DataOutputStream
 import java.io.InputStreamReader
@@ -15,19 +15,26 @@ import javax.crypto.spec.SecretKeySpec
 
 data class V2VoteSender(
     override val address: InetSocketAddress,
-    val key: Key
+    val key: Key,
 ) : VoteSender(address) {
-
     companion object {
         const val MAGIC = 0x733A
     }
 
-    data class V2Message(val signature: String, val payload: String)
-    data class V2Response(val status: String, val cause: String?, val error: String?)
+    data class V2Message(
+        val signature: String,
+        val payload: String,
+    )
+
+    data class V2Response(
+        val status: String,
+        val cause: String?,
+        val error: String?,
+    )
 
     constructor(address: InetSocketAddress, token: String) : this(
         address,
-        SecretKeySpec(token.toByteArray(), "HmacSHA256")
+        SecretKeySpec(token.toByteArray(), "HmacSHA256"),
     )
 
     private val mapper = jacksonObjectMapper()
@@ -39,23 +46,26 @@ data class V2VoteSender(
             val out = DataOutputStream(socket.getOutputStream())
 
             // read challenge
-            val challenge = reader.readLine().split(' ').let {
-                check(it.size == 3) { "Greeting does not include challenge, not a v2 server!" }
-                it[2]
-            }
+            val challenge =
+                reader.readLine().split(' ').let {
+                    check(it.size == 3) { "Greeting does not include challenge, not a v2 server!" }
+                    it[2]
+                }
 
             // construct and send vote
-            val payload: String = mapper.valueToTree<ObjectNode>(vote).let {
-                it.put("challenge", challenge)
-                it.toString()
-            }
+            val payload: String =
+                mapper.valueToTree<ObjectNode>(vote).let {
+                    it.put("challenge", challenge)
+                    it.toString()
+                }
             val signature = Base64.getEncoder().encodeToString(mac.doFinal(payload.toByteArray()))
-            val message = mapper.writeValueAsBytes(
-                V2Message(
-                    signature,
-                    payload
+            val message =
+                mapper.writeValueAsBytes(
+                    V2Message(
+                        signature,
+                        payload,
+                    ),
                 )
-            )
             out.writeShort(MAGIC)
             out.writeShort(message.size)
             out.write(message)

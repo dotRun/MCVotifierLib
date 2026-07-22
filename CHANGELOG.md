@@ -1,9 +1,18 @@
 # Changelog
 
 ## [Unreleased]
+### Added
+- Unit tests covering Jackson (de)serialization
+- Gradle version catalog (`gradle/libs.versions.toml`)
+
 ### Changed
-- Update to Gradle 8
+- Java 25
+- Kotlin 2.4.10
+- Update to Gradle 9
+- Migrate to Jackson 3 (`tools.jackson` coordinates)
 - Bump Gradle plugins and dependencies
+- Update CI actions (checkout, artifact, setup-gradle, git-release) and runner image
+- Automate CHANGELOG release patching with the `org.jetbrains.changelog` plugin
 
 ## [0.2.0] - 2022-11-27
 ### Added
