@@ -1,18 +1,10 @@
 # Changelog
 
 ## [Unreleased]
-
-### Added
-
-### Changed
-
-### Deprecated
-
-### Removed
-
 ### Fixed
-
-### Security
+- Changelog plugin no longer pre-populates the new Unreleased section with empty Keep a Changelog group headers
+- Release hook now fails loudly (instead of silently skipping the whole release) if the Unreleased section has no content when a release runs
+- Publish workflow's registry publish step is skipped on the branch-triggered run when it's also sitting on a release tag, avoiding a duplicate-version 409 against the tag-triggered run
 
 ## [0.3.0] - 2026-07-22
 
