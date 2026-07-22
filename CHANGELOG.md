@@ -14,6 +14,9 @@
 - Update CI actions (checkout, artifact, setup-gradle, git-release) and runner image
 - Automate CHANGELOG release patching with the `org.jetbrains.changelog` plugin
 
+### Fixed
+- Release workflow authenticates via an SSH deploy key (`COMMIT_KEY`) instead of a stale PAT
+
 ## [0.2.0] - 2022-11-27
 ### Added
 - Separate publish and release creation action workflows
