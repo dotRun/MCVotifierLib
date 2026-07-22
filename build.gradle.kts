@@ -33,7 +33,7 @@ scmVersion {
 
 changelog {
     repositoryUrl.set("https://github.com/dotRun/MCVotifierLib")
-    groups.set(listOf("Added", "Changed", "Deprecated", "Removed", "Fixed", "Security"))
+    groups.set(emptyList())
 }
 
 fun patchChangelogToVersion(newVersion: String) {
@@ -43,6 +43,7 @@ fun patchChangelogToVersion(newVersion: String) {
         .apply {
             version.set(newVersion)
             header.set("$newVersion - ${date()}")
+            patchEmpty.set(false)
         }.run()
 }
 
