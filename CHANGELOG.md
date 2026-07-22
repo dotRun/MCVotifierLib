@@ -1,11 +1,14 @@
 # Changelog
 
 ## [Unreleased]
+
 ### Added
+
 - Unit tests covering Jackson (de)serialization
 - Gradle version catalog (`gradle/libs.versions.toml`)
 
 ### Changed
+
 - Java 25
 - Kotlin 2.4.10
 - Update to Gradle 9
@@ -16,6 +19,7 @@
 - Replace the `antonyurchenko/git-release` Docker action with `gh release create`/`gh release delete`, using the `org.jetbrains.changelog` plugin's `getChangelog` task to extract release notes instead of a separate third-party changelog parser
 
 ### Fixed
+
 - Release workflow authenticates via an SSH deploy key (`COMMIT_KEY`) instead of a stale PAT
 - Release commit now actually stages `CHANGELOG.md` (axion's commit hook only commits explicitly registered patterns, so the changelog patch was previously silently dropped)
 - Changelog plugin no longer pre-populates the new Unreleased section with empty Keep a Changelog group headers
@@ -23,19 +27,25 @@
 - Publish workflow's registry publish step is skipped on the branch-triggered run when it's also sitting on a release tag, avoiding a duplicate-version 409 against the tag-triggered run
 
 ## [0.2.0] - 2022-11-27
+
 ### Added
+
 - Separate publish and release creation action workflows
 
 ### Changed
+
 - Java 17
 - Updated Actions CI with newer actions, shared build job, and snapshot releases
 - Update dependencies
 
 ### Fixed
+
 - Use maven-compatible version for dependencies (jackson `2.14.0` instead of `2.14.+`)
 
 ## [0.1.0] - 2020-06-04
+
 ### Added
+
 - Initial Release
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
