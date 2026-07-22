@@ -16,6 +16,7 @@
 
 ### Fixed
 - Release workflow authenticates via an SSH deploy key (`COMMIT_KEY`) instead of a stale PAT
+- Release commit now actually stages `CHANGELOG.md` (axion's commit hook only commits explicitly registered patterns, so the changelog patch was previously silently dropped)
 
 ## [0.2.0] - 2022-11-27
 ### Added
