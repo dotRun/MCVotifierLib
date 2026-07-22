@@ -4,13 +4,14 @@ data class Vote(
     val serviceName: String,
     val username: String,
     val address: String,
-    val timestamp: String = System.currentTimeMillis().toString()
+    val timestamp: String = System.currentTimeMillis().toString(),
 ) {
-    override fun toString() = """
+    override fun toString() =
+        """
         VOTE
         $serviceName
         $username
         $address
         $timestamp
-    """.trimIndent()
+        """.trimIndent()
 }

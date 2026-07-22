@@ -1,23 +1,21 @@
+import org.jetbrains.changelog.date
+import org.jetbrains.changelog.tasks.PatchChangelogTask
 import pl.allegro.tech.build.axion.release.domain.hooks.HookContext
-import java.time.OffsetDateTime
-import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
 
 plugins {
-    kotlin("jvm") version "1.8.10"
+    alias(libs.plugins.kotlin.jvm)
     id("maven-publish")
-    id("pl.allegro.tech.build.axion-release") version "1.14.4"
-    id("org.jlleitschuh.gradle.ktlint") version "11.2.0"
+    alias(libs.plugins.axion.release)
+    alias(libs.plugins.ktlint)
+    alias(libs.plugins.changelog)
 }
-
-val repoRef = "dotRun\\/MCVotifierLib"
 
 group = "io.dotrun"
 version = scmVersion.version
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
+        languageVersion.set(JavaLanguageVersion.of(25))
     }
 }
 
@@ -25,31 +23,25 @@ scmVersion {
     versionIncrementer("incrementMinorIfNotOnRelease", mapOf("releaseBranchPattern" to "release/.+"))
 
     hooks {
-        // FIXME - workaround for Kotlin DSL issue https://github.com/allegro/axion-release-plugin/issues/500
-        pre(
-            "fileUpdate",
-            mapOf(
-                "file" to "CHANGELOG.md",
-                "pattern" to KotlinClosure2<String, HookContext, String>({ _, _ ->
-                    "\\[Unreleased\\]([\\s\\S]+?)\\n(?:^\\[Unreleased\\]: https:\\/\\/github\\.com\\/$repoRef\\/compare\\/[^\\n]*\$([\\s\\S]*))?\\z"
-                }),
-                "replacement" to KotlinClosure2<String, HookContext, String>({ v, c ->
-                    """
-                        \[Unreleased\]
-                        
-                        ## \[$v\] - ${currentDateString()}$1
-                        \[Unreleased\]: https:\/\/github\.com\/$repoRef\/compare\/v$v...HEAD
-                        \[$v\]: https:\/\/github\.com\/$repoRef\/${if (c.previousVersion == v) "releases/tag/v$v" else "compare/v${c.previousVersion}...v$v"}${'$'}2
-                    """.trimIndent()
-                })
-            )
-        )
-
+        pre { context: HookContext -> patchChangelogToVersion(context.releaseVersion) }
         pre("commit")
     }
 }
 
-fun currentDateString() = OffsetDateTime.now(ZoneOffset.UTC).toLocalDate().format(DateTimeFormatter.ISO_DATE)
+changelog {
+    repositoryUrl.set("https://github.com/dotRun/MCVotifierLib")
+    groups.set(listOf("Added", "Changed", "Deprecated", "Removed", "Fixed", "Security"))
+}
+
+fun patchChangelogToVersion(newVersion: String) {
+    tasks
+        .named<PatchChangelogTask>("patchChangelog")
+        .get()
+        .apply {
+            version.set(newVersion)
+            header.set("$newVersion - ${date()}")
+        }.run()
+}
 
 repositories {
     mavenCentral()
@@ -57,7 +49,14 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-    implementation(group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version = "2.14.2")
+    implementation(libs.jackson.module.kotlin)
+
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.platform.launcher)
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
 
 publishing {
@@ -81,7 +80,7 @@ publishing {
 
 tasks {
     wrapper {
-        gradleVersion = "8.0.1"
+        gradleVersion = "9.6.1"
         distributionType = Wrapper.DistributionType.ALL
     }
 }

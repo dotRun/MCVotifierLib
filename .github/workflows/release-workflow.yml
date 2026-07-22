@@ -17,15 +17,15 @@ on:
 jobs:
   release:
     name: Gradle Release
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     outputs:
       version: ${{ steps.version.outputs.version }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           token: "${{ secrets.PAT }}"
           fetch-depth: 0
-      - uses: gradle/gradle-build-action@v2
+      - uses: gradle/actions/setup-gradle@v6
       - name: Gradle Release
         if: ${{ inputs.versionIncrementer == 'default' }}
         env:

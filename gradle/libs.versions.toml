@@ -1,0 +1,18 @@
+[versions]
+kotlin = "2.4.10"
+axion-release = "1.21.2"
+ktlint = "14.2.0"
+changelog = "2.5.0"
+jackson-module-kotlin = "3.2.1"
+junit = "6.1.2"
+
+[libraries]
+jackson-module-kotlin = { module = "tools.jackson.module:jackson-module-kotlin", version.ref = "jackson-module-kotlin" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "junit" }
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+axion-release = { id = "pl.allegro.tech.build.axion-release", version.ref = "axion-release" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
+changelog = { id = "org.jetbrains.changelog", version.ref = "changelog" }
