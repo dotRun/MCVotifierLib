@@ -23,16 +23,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          token: "${{ secrets.PAT }}"
+          ssh-key: "${{ secrets.COMMIT_KEY }}"
           fetch-depth: 0
+      - uses: webfactory/ssh-agent@v0.10.0
+        with:
+          ssh-private-key: ${{ secrets.COMMIT_KEY }}
       - uses: gradle/actions/setup-gradle@v6
       - name: Gradle Release
         if: ${{ inputs.versionIncrementer == 'default' }}
-        env:
-          DEPLOY_KEY: ${{ secrets.COMMIT_KEY }}
         run: ./gradlew release
       - name: Gradle Release w/ Increment Override
         if: ${{ inputs.versionIncrementer != 'default' }}
-        env:
-          DEPLOY_KEY: ${{ secrets.COMMIT_KEY }}
         run: ./gradlew release -Prelease.versionIncrementer=${{ inputs.versionIncrementer }}
