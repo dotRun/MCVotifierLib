@@ -1,6 +1,9 @@
 # Changelog
 
 ## [Unreleased]
+### Changed
+- Replace the `antonyurchenko/git-release` Docker action with `gh release create`/`gh release delete`, using the `org.jetbrains.changelog` plugin's `getChangelog` task to extract release notes instead of a separate third-party changelog parser
+
 ### Fixed
 - Changelog plugin no longer pre-populates the new Unreleased section with empty Keep a Changelog group headers
 - Release hook now fails loudly (instead of silently skipping the whole release) if the Unreleased section has no content when a release runs
