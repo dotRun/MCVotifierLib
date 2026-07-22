@@ -28,7 +28,7 @@ class JacksonSerializationTest {
         val message = V2VoteSender.V2Message(signature = "sig", payload = "{}")
 
         val bytes = mapper.writeValueAsBytes(message)
-        val decoded = mapper.readValue<V2VoteSender.V2Message>(String(bytes))
+        val decoded = mapper.readValue<V2VoteSender.V2Message>(String(bytes, Charsets.UTF_8))
 
         assertEquals(message, decoded)
     }
