@@ -23,18 +23,25 @@ jobs:
         with:
           name: build
           path: build
-      - name: Release
-        uses: docker://antonyurchenko/git-release:v6.0.0
+      - name: Extract release notes
+        run: |
+          if [ "${{ github.ref_type }}" = "tag" ]; then
+            ./gradlew getChangelog --console=plain -q --no-header --project-version="${{ needs.build.outputs.version }}" --output-file=build/release-notes.md
+          else
+            ./gradlew getChangelog --console=plain -q --no-header --unreleased --output-file=build/release-notes.md
+          fi
+      - name: Create GitHub release for tag
+        if: ${{ github.ref_type == 'tag' }}
+        run: gh release create "${{ github.ref_name }}" build/*.jar --title "${{ needs.build.outputs.version }}" --notes-file build/release-notes.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RELEASE_NAME: ${{ needs.build.outputs.version }}
-          PRE_RELEASE: ${{ github.ref_type == 'branch' }}
-          UNRELEASED: ${{ github.ref_type == 'branch' && 'update' || '' }}
-          UNRELEASED_TAG: latest-snapshot
-          ALLOW_EMPTY_CHANGELOG: ${{ github.ref_type == 'branch' && 'true' || 'false' }}
-        with:
-          args: |
-            build/*.jar
+      - name: Update latest-snapshot pre-release
+        if: ${{ github.ref_type == 'branch' }}
+        run: |
+          gh release delete latest-snapshot --yes --cleanup-tag || true
+          gh release create latest-snapshot build/*.jar --title "${{ needs.build.outputs.version }}" --prerelease --notes-file build/release-notes.md --target "${{ github.sha }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Check for tagged release
         id: check_tag
         run: |
