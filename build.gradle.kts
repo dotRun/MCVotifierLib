@@ -23,7 +23,10 @@ scmVersion {
     versionIncrementer("incrementMinorIfNotOnRelease", mapOf("releaseBranchPattern" to "release/.+"))
 
     hooks {
-        pre { context: HookContext -> patchChangelogToVersion(context.releaseVersion) }
+        pre { context: HookContext ->
+            patchChangelogToVersion(context.releaseVersion)
+            context.addCommitPattern("CHANGELOG.md")
+        }
         pre("commit")
     }
 }
