@@ -1,10 +1,15 @@
 # Changelog
 
 ## [Unreleased]
+
+## [0.2.1] - 2026-07-22
+
 ### Changed
+
 - Replace the `antonyurchenko/git-release` Docker action with `gh release create`/`gh release delete`, using the `org.jetbrains.changelog` plugin's `getChangelog` task to extract release notes instead of a separate third-party changelog parser
 
 ### Fixed
+
 - Changelog plugin no longer pre-populates the new Unreleased section with empty Keep a Changelog group headers
 - Release hook now fails loudly (instead of silently skipping the whole release) if the Unreleased section has no content when a release runs
 - Publish workflow's registry publish step is skipped on the branch-triggered run when it's also sitting on a release tag, avoiding a duplicate-version 409 against the tag-triggered run
@@ -53,7 +58,8 @@
 
 - Initial Release
 
-[Unreleased]: https://github.com/dotRun/MCVotifierLib/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/dotRun/MCVotifierLib/compare/v0.2.1...HEAD
 [0.3.0]: https://github.com/dotRun/MCVotifierLib/compare/v0.2.0...v0.3.0
+[0.2.1]: https://github.com/dotRun/MCVotifierLib/compare/v0.3.0...v0.2.1
 [0.2.0]: https://github.com/dotRun/MCVotifierLib/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/dotRun/MCVotifierLib/commits/v0.1.0
